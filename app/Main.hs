@@ -2,13 +2,20 @@ module Main where
 
 import System.IO
 import Lib
+import GHC.IO.Encoding
 
-main :: IO ()
-main = do
+loop :: IO ()
+loop = do
     iseof <- hIsEOF stdin
     if iseof
         then return ()
         else do
             line <- getLine
             putStrLn line
-            main
+            loop
+
+main :: IO ()
+main = do
+    enc <- mkTextEncoding "UTF-8//IGNORE"
+    hSetEncoding stdin enc
+    loop
