@@ -4,7 +4,7 @@ Helper setup for browsing bash history. Also my playground project to play with 
 ## My setup
 Compile and put `bashstory-exe` on PATH. Then add this to bashrc:
 
-```
+```bash
 export HISTCONTROL=ignoredups # replace last cmd by this one if equal
 export HISTSIZE=100000        # how many cmds to remember in living bash shell
 export HISTFILESIZE=100000    # how many cmds to store in history file
