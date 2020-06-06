@@ -2,7 +2,7 @@
 Helper setup for browsing bash history. Also my playground project to play with Haskell.
 
 ## My setup
-Compile and put `bashstory-exe` on PATH. Then add this to bashrc:
+Run `stack install` to put bashstory binary on your PATH. Then append the following to bashrc:
 
 ```bash
 export HISTCONTROL=ignoredups # replace last cmd by this one if equal
