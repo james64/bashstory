@@ -10,13 +10,22 @@ import Options.Applicative
 import Data.Semigroup ((<>))
 
 -- Argument parsing --
-data Options = Options { current :: Bool }
+data Options = Options
+  { sessionSeparator :: String
+  , current :: Bool }
 
 currentP :: Parser Bool
 currentP = switch ( long "current" <> short 'c' <> help "Commands from current session only" )
 
+sessionSepP :: Parser String
+sessionSepP = strOption
+  ( long "session-delim"
+  <> help "Session separator string"
+  <> showDefault
+  <> value "### Session ###" )
+
 options :: Parser Options
-options = Options <$> currentP
+options = Options <$> sessionSepP <*> currentP
 
 opts :: ParserInfo Options
 opts = info (options <**> helper)
@@ -25,8 +34,8 @@ opts = info (options <**> helper)
   <> header "this is helper header" )
 
 run :: Options -> IO ()
-run (Options False) = interact id
-run (Options True)  = currSessIO
+run (Options _ False) = interact id
+run (Options ss True)  = currSessIO ss
 
 main :: IO ()
 main = do
@@ -34,19 +43,16 @@ main = do
   hSetEncoding stdin enc
   run =<< execParser opts
 
-sessionDelimiter :: String
-sessionDelimiter = "### Session ###"
-
-currentSession :: [String] -> [String]
-currentSession = reverse . foldl' lastS []
+currentSession :: String -> [String] -> [String]
+currentSession sesDel = reverse . foldl' lastS []
     where
         lastS :: [String] -> String -> [String]
         lastS _ l | isDelim l = []
         lastS s l             = l : s
 
-        isDelim = isSuffixOf sessionDelimiter
+        isDelim = isSuffixOf sesDel
 
-currSessIO :: IO ()
-currSessIO = do
+currSessIO :: String -> IO ()
+currSessIO sesDel = do
     input <- getContents
-    mapM_ putStrLn $ id $ currentSession (lines input)
+    mapM_ putStrLn $ id $ currentSession sesDel (lines input)

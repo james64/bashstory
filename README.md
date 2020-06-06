@@ -11,20 +11,20 @@ export HISTFILESIZE=100000    # how many cmds to store in history file
 export HISTTIMEFORMAT="[%F %T] "
 shopt -s histappend           # append to history, don't overwrite it, otherwise cmds are lost
 
-# Artificial session started marker history entry
+# Artificial history entry to mark start of new session
+SESSION_DELIMITER='### Session ###'
 PROMPT_COMMAND_OLD="$PROMPT_COMMAND"
-PROMPT_COMMAND="history -s '### Session ###'; PROMPT_COMMAND='$PROMPT_COMMAND_OLD'; $PROMPT_COMMAND"
+PROMPT_COMMAND="history -s $SESSION_DELIMITER; PROMPT_COMMAND='$PROMPT_COMMAND_OLD'; $PROMPT_COMMAND"
 
-alias hist='history | bashstory-exe '
+alias hist="history | bashstory-exe --session-delim $SESSION_DELIMITER"
 ```
 
 ## Commands
 * `hist` - show whole history list
-* `hist curr` - show cmds from current session only
+* `hist -c` - show cmds from current session only
 
 
 ## Todo
-* session delimiter configurable by argument
 * history during last amounth of minutes/hours
 * include cmds from other running bash instances
 * view of how different sessions evolved over time
