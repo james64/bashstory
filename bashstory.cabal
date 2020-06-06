@@ -4,13 +4,13 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 54e964734a0da6cd77eb193437193eaea1255aaef5824e718d2795307652c7ff
+-- hash: 4aa30703ceabd867340afbf21ca3018b44a044982f7287e7380155d115301a6c
 
 name:           bashstory
-version:        0.1.0.0
+version:        0.0.1
 description:    Please see the README on GitHub at <https://github.com/githubuser/bashstory#readme>
-homepage:       https://github.com/githubuser/bashstory#readme
-bug-reports:    https://github.com/githubuser/bashstory/issues
+homepage:       https://github.com/james64/bashstory#readme
+bug-reports:    https://github.com/james64/bashstory/issues
 author:         Author name here
 maintainer:     example@example.com
 copyright:      2020 Author name here
@@ -19,11 +19,10 @@ license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md
-    ChangeLog.md
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/bashstory
+  location: https://github.com/james64/bashstory
 
 library
   exposed-modules:
@@ -34,6 +33,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , optparse-applicative
   default-language: Haskell2010
 
 executable bashstory-exe
@@ -46,6 +46,7 @@ executable bashstory-exe
   build-depends:
       base >=4.7 && <5
     , bashstory
+    , optparse-applicative
   default-language: Haskell2010
 
 test-suite bashstory-test
@@ -59,4 +60,5 @@ test-suite bashstory-test
   build-depends:
       base >=4.7 && <5
     , bashstory
+    , optparse-applicative
   default-language: Haskell2010
