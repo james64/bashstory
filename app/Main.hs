@@ -30,8 +30,7 @@ options = Options <$> sessionSepP <*> currentP
 opts :: ParserInfo Options
 opts = info (options <**> helper)
   (  fullDesc
-  <> progDesc "Print history list"
-  <> header "this is helper header" )
+  <> header "Extension to bash history builtin" )
 
 run :: Options -> IO ()
 run (Options _ False) = interact id
