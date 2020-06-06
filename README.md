@@ -14,9 +14,9 @@ shopt -s histappend           # append to history, don't overwrite it, otherwise
 # Artificial history entry to mark start of new session
 SESSION_DELIMITER='### Session ###'
 PROMPT_COMMAND_OLD="$PROMPT_COMMAND"
-PROMPT_COMMAND="history -s $SESSION_DELIMITER; PROMPT_COMMAND='$PROMPT_COMMAND_OLD'; $PROMPT_COMMAND"
+PROMPT_COMMAND="history -s '$SESSION_DELIMITER'; PROMPT_COMMAND='$PROMPT_COMMAND_OLD'; $PROMPT_COMMAND"
 
-alias hist="history | bashstory-exe --session-delim $SESSION_DELIMITER"
+alias hist="history | bashstory-exe --session-delim '$SESSION_DELIMITER'"
 ```
 
 ## Commands
