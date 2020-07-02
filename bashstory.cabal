@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4aa30703ceabd867340afbf21ca3018b44a044982f7287e7380155d115301a6c
+-- hash: 7b5d332cea9d6a214e4c59c8c1f4cf67c2a7f2b9ea671efc3c06d7b59a95ebd5
 
 name:           bashstory
 version:        0.0.1
@@ -34,6 +34,7 @@ library
   build-depends:
       base >=4.7 && <5
     , optparse-applicative
+    , time
   default-language: Haskell2010
 
 executable bashstory-exe
@@ -47,6 +48,7 @@ executable bashstory-exe
       base >=4.7 && <5
     , bashstory
     , optparse-applicative
+    , time
   default-language: Haskell2010
 
 test-suite bashstory-test
@@ -61,4 +63,5 @@ test-suite bashstory-test
       base >=4.7 && <5
     , bashstory
     , optparse-applicative
+    , time
   default-language: Haskell2010

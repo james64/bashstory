@@ -4,7 +4,7 @@ import System.IO ( stdin, hSetEncoding )
 import System.Environment ( getArgs )
 import Data.List ( foldl', isSuffixOf )
 import GHC.IO.Encoding ( mkTextEncoding )
-import Data.Time ( getCurrentTime, UTCTime )
+import Data.Time ( getCurrentTime, UTCTime, addUTCTime, secondsToNominalDiffTime )
 
 -- arg parsing
 import Options.Applicative
@@ -88,4 +88,7 @@ translateTimeFilter now (RelTimeFilter n u) = let
 
 filterByTimeIO :: String -> Bool -> [RelTimeFilter] -> IO ()
 filterByTimeIO sesDel currOnly timeFilters = do
-  input <- getContents
+  now <- getCurrentTime
+  let absFilters = map (translateTimeFilter now) timeFilters
+  lns <- fmap lines getContents
+  return ()
