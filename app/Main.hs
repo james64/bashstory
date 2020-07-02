@@ -4,15 +4,24 @@ import System.IO ( stdin, hSetEncoding )
 import System.Environment ( getArgs )
 import Data.List ( foldl', isSuffixOf )
 import GHC.IO.Encoding ( mkTextEncoding )
+import Data.Time ( getCurrentTime, UTCTime )
 
 -- arg parsing
 import Options.Applicative
 import Data.Semigroup ((<>))
 
--- Argument parsing --
+data TimeFilterUnit = Seconds | Minutes | Hours | Days
+data RelTimeFilter = RelTimeFilter
+  { number :: Int
+  , unit   :: TimeFilterUnit }
+
+data AbsTimeFilter = Before UTCTime
+                   | After UTCTime
+
 data Options = Options
   { sessionSeparator :: String
-  , current :: Bool }
+  , current :: Bool
+  , timeFilters :: [RelTimeFilter] }
 
 currentP :: Parser Bool
 currentP = switch ( long "current" <> short 'c' <> help "Commands from current session only" )
@@ -24,8 +33,14 @@ sessionSepP = strOption
   <> showDefault
   <> value "### Session ###" )
 
+timeFiltersP :: Parser RelTimeFilter
+timeFiltersP = strOption
+  ( long "time"
+  <> short 't'
+  <> help "Take only commands before/after given time. Format: [+-]<int>[smhd]" )
+
 options :: Parser Options
-options = Options <$> sessionSepP <*> currentP
+options = Options <$> sessionSepP <*> currentP <*> many(timeFiltersP)
 
 opts :: ParserInfo Options
 opts = info (options <**> helper)
@@ -33,8 +48,9 @@ opts = info (options <**> helper)
   <> header "Extension to bash history builtin" )
 
 run :: Options -> IO ()
-run (Options _ False) = interact id
-run (Options ss True)  = currSessIO ss
+run (Options _  False []) = interact id
+run (Options ss True [])  = currSessIO ss
+run (Options ss curr fs)  = filterByTimeIO ss curr fs
 
 main :: IO ()
 main = do
@@ -55,3 +71,21 @@ currSessIO :: String -> IO ()
 currSessIO sesDel = do
     input <- getContents
     mapM_ putStrLn $ id $ currentSession sesDel (lines input)
+
+toSeconds :: Int -> TimeFilterUnit -> Int
+toSeconds n Seconds = n
+toSeconds n Minutes = n * 60
+toSeconds n Hours   = n * 3600
+toSeconds n Days    = n * 86400
+
+translateTimeFilter :: UTCTime -> RelTimeFilter -> AbsTimeFilter
+translateTimeFilter now (RelTimeFilter n u) = let
+  pastSeconds = negate $ abs $ toSeconds n u
+  pastTime = addUTCTime (secondsToNominalDiffTime pastSeconds) now
+  in if n > 0
+       then After  pastTime
+       else Before pastTime
+
+filterByTimeIO :: String -> Bool -> [RelTimeFilter] -> IO ()
+filterByTimeIO sesDel currOnly timeFilters = do
+  input <- getContents
