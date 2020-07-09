@@ -4,7 +4,7 @@ import System.IO ( stdin, hSetEncoding )
 import System.Environment ( getArgs )
 import Data.List ( foldl', isSuffixOf )
 import GHC.IO.Encoding ( mkTextEncoding )
-import Data.Time ( getCurrentTime, UTCTime, addUTCTime, secondsToNominalDiffTime )
+import Data.Time ( getCurrentTime, UTCTime, addUTCTime, NominalDiffTime )
 
 -- arg parsing
 import Options.Applicative
@@ -80,8 +80,9 @@ toSeconds n Days    = n * 86400
 
 translateTimeFilter :: UTCTime -> RelTimeFilter -> AbsTimeFilter
 translateTimeFilter now (RelTimeFilter n u) = let
-  pastSeconds = negate $ abs $ toSeconds n u
-  pastTime = addUTCTime (secondsToNominalDiffTime pastSeconds) now
+  pastSeconds :: NominalDiffTime
+  pastSeconds = fromIntegral $ negate $ abs $ toSeconds n u
+  pastTime = addUTCTime pastSeconds now
   in if n > 0
        then After  pastTime
        else Before pastTime
