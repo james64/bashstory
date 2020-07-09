@@ -19,6 +19,10 @@ PROMPT_COMMAND="history -s '$SESSION_DELIMITER'; PROMPT_COMMAND='$PROMPT_COMMAND
 alias hist="history | bashstory-exe --session-delim '$SESSION_DELIMITER'"
 ```
 
+#### Caution
+`PROMPT_COMMAND` overwrites itself after first execution. Any configuration of `PROMPT_COMMAND` done after this excerpt will have no effect.
+If you have other `PROMPT_COMMAND` modifications put them above this one.
+
 ## Commands
 * `hist` - show whole history list
 * `hist -c` - show cmds from current session only
