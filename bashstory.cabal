@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.1.
+-- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7b5d332cea9d6a214e4c59c8c1f4cf67c2a7f2b9ea671efc3c06d7b59a95ebd5
+-- hash: 56d4644a4129526b7423ff64140a2340ea67f69128aa9b9c038841f143ddd709
 
 name:           bashstory
 version:        0.0.1
@@ -26,7 +26,10 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      GlobalTypes
+      Parsers
+      Routines.CurrSession
+      Routines.FilterByTime
   other-modules:
       Paths_bashstory
   hs-source-dirs:
