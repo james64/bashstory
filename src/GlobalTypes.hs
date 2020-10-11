@@ -4,12 +4,17 @@ module GlobalTypes
     , TimeFilterUnit (..)
     ) where
 
+import Data.Time ( UTCTime )
+
 data TimeFilterUnit = Seconds | Minutes | Hours | Days
-data RelTimeFilter = RelTimeFilter
-  { number :: Int
-  , unit   :: TimeFilterUnit }
+
+data TimeFilter =
+    RelTimeFilter { number :: Int, unit :: TimeFilterUnit }
+  | AbsTimeFilter { timestamp :: UTCTime }
 
 data Options = Options
   { sessionSeparator :: String
   , current :: Bool
-  , timeFilters :: [RelTimeFilter] }
+  , before :: Maybe TimeFilter
+  , after :: Maybe TimeFilter }
+
