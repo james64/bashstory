@@ -5,17 +5,15 @@ module Routines.FilterByTime
 import Data.Time ( getCurrentTime, UTCTime, addUTCTime, NominalDiffTime )
 import GlobalTypes
 
-data AbsTimeFilter = Before UTCTime
-                   | After UTCTime
-
 toSeconds :: Int -> TimeFilterUnit -> Int
 toSeconds n Seconds = n
 toSeconds n Minutes = n * 60
 toSeconds n Hours   = n * 3600
 toSeconds n Days    = n * 86400
 
-translateTimeFilter :: UTCTime -> RelTimeFilter -> AbsTimeFilter
-translateTimeFilter now (RelTimeFilter n u) = let
+translate :: UTCTime -> TimeFilter -> UTCTime
+translate now (AbsTimeFilter h m s) = 
+translate now (RelTimeFilter n u) = let
   pastSeconds :: NominalDiffTime
   pastSeconds = fromIntegral $ negate $ abs $ toSeconds n u
   pastTime = addUTCTime pastSeconds now
@@ -23,10 +21,11 @@ translateTimeFilter now (RelTimeFilter n u) = let
        then After  pastTime
        else Before pastTime
 
-filterByTimeIO :: String -> Bool -> [RelTimeFilter] -> IO ()
-filterByTimeIO sesDel currOnly timeFilters = do
+filterByTimeIO :: String -> Bool -> TimeFilter -> TimeFilter -> IO ()
+filterByTimeIO sesDel currOnly after before = do
   now <- getCurrentTime
-  let absFilters = map (translateTimeFilter now) timeFilters
+  let absAfter = translate after
+  let absBefore = translate before
   lns <- fmap lines getContents
   return ()
 

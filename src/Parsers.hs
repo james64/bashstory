@@ -8,26 +8,31 @@ import Text.Regex.TDFA
 
 import GlobalTypes
 
-let relTimeRe = "^([0-9])([smhd])$" :: String
-let absTimeRe = "^[0-9]{2}:[0-9]{2}:[0-9]{2}$" :: String
+reHelper :: String -> String -> [String]
+reHelper re s | (_,_,_,grps) <- (s =~ re) :: (String, String, String,[String]) = grps
+              | otherwise                                                      = []
 
-readTimeValue :: ReadM RelTimeFilter
+isRelTime = reHelper "^([0-9])([smhd])$"
+isAbsTime = reHelper "^[0-9]{2}:[0-9]{2}:[0-9]{2}$" 
+
+readTimeValue :: ReadM TimeFilter
 readTimeValue = eitherReader $ parse
-  where parse :: String -> Either String RelTimeFilter
-        parse s | (_,_,_,[cnt,u]) <- (s =~ relTimeRe) :: (String,String,String,[String]) = RelTimeFilter (read cnt) $ case u of
+  where parse :: String -> Either String TimeFilter
+        parse s | [num,u] <- isRelTime s = Right $ RelTimeFilter (read num) $ case u of
                     's' -> Seconds
                     'm' -> Minutes
                     'h' -> Hours
                     'd' -> Days
-                | (_,_,_,[h,m,s]) <- (s =~ absTimeRe) :: (String,String,String,[String]) = Rel
+                | [h,m,s] <- isAbsTime s = Right $ AbsTimeFilter (read h) (read m) (read s)
+                | otherwise = Left "Unknown format: " ++ s
 
-beforeP :: Parser RelTimeFilter
+beforeP :: Parser TimeFilter
 beforeP :: option readTimeValue
   ( long "before"
   <> short 'b'
   <> help" Take only commands beffore given time. Format: <num>[smhd] or HH:MM:SS"
 
-afterP :: Parser RelTimeFilter
+afterP :: Parser TimeFilter
 afterP = option readTimeValue
   ( long "after"
   <> short 'a'

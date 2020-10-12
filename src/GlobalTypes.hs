@@ -1,6 +1,6 @@
 module GlobalTypes
     ( Options (..)
-    , RelTimeFilter (..)
+    , TimeFilter (..)
     , TimeFilterUnit (..)
     ) where
 
@@ -15,6 +15,6 @@ data TimeFilter =
 data Options = Options
   { sessionSeparator :: String
   , current :: Bool
-  , before :: Maybe TimeFilter
-  , after :: Maybe TimeFilter }
+  , after :: Maybe TimeFilter
+  , before :: Maybe TimeFilter }
 
