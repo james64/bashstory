@@ -19,24 +19,24 @@ readTimeValue :: ReadM TimeFilter
 readTimeValue = eitherReader $ parse
   where parse :: String -> Either String TimeFilter
         parse s | [num,u] <- isRelTime s = Right $ RelTimeFilter (read num) $ case u of
-                    's' -> Seconds
-                    'm' -> Minutes
-                    'h' -> Hours
-                    'd' -> Days
-                | [h,m,s] <- isAbsTime s = Right $ AbsTimeFilter (read h) (read m) (read s)
+                    "s" -> Seconds
+                    "m" -> Minutes
+                    "h" -> Hours
+                    "d" -> Days
+                | [h,m,s] <- isAbsTime s = Right $ AbsTimeFilter (read h) (read m) (read s) -- TODO this requires UTC time as argument
                 | otherwise = Left "Unknown format: " ++ s
 
 beforeP :: Parser TimeFilter
-beforeP :: option readTimeValue
-  ( long "before"
-  <> short 'b'
-  <> help" Take only commands beffore given time. Format: <num>[smhd] or HH:MM:SS"
+beforeP = option readTimeValue
+   ( long "before"
+   <> short 'b'
+   <> help" Take only commands beffore given time. Format: <num>[smhd] or HH:MM:SS" )
 
 afterP :: Parser TimeFilter
 afterP = option readTimeValue
-  ( long "after"
-  <> short 'a'
-  <> help "Take only commands after given time. Format: <num>[smhd] or HH:MM:SS"
+   ( long "after"
+   <> short 'a'
+   <> help "Take only commands after given time. Format: <num>[smhd] or HH:MM:SS" )
 
 currentP :: Parser Bool
 currentP = switch ( long "current" <> short 'c' <> help "Commands from current session only" )
