@@ -23,8 +23,8 @@ readTimeValue = eitherReader $ parse
                     "m" -> Minutes
                     "h" -> Hours
                     "d" -> Days
-                | [h,m,s] <- isAbsTime s = Right $ AbsTimeFilter (read h) (read m) (read s) -- TODO this requires UTC time as argument
-                | otherwise = Left "Unknown format: " ++ s
+                | [h,m,s] <- isAbsTime s = Right $ AbsTimeFilter (read h) (read m) (read s)
+                | otherwise = Left $ "Unknown format: " ++ s
 
 beforeP :: Parser TimeFilter
 beforeP = option readTimeValue

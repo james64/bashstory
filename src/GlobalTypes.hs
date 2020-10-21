@@ -10,7 +10,7 @@ data TimeFilterUnit = Seconds | Minutes | Hours | Days
 
 data TimeFilter =
     RelTimeFilter { number :: Int, unit :: TimeFilterUnit }
-  | AbsTimeFilter { timestamp :: UTCTime }
+  | AbsTimeFilter { hours :: Int, minutes :: Int, seconds :: Int }
 
 data Options = Options
   { sessionSeparator :: String
