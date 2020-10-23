@@ -26,14 +26,14 @@ readTimeValue = eitherReader $ parse
                 | [h,m,s] <- isAbsTime s = Right $ AbsTimeFilter (read h) (read m) (read s)
                 | otherwise = Left $ "Unknown format: " ++ s
 
-beforeP :: Parser TimeFilter
-beforeP = option readTimeValue
+beforeP :: Parser (Maybe TimeFilter)
+beforeP = optional $ option readTimeValue
    ( long "before"
    <> short 'b'
    <> help" Take only commands beffore given time. Format: <num>[smhd] or HH:MM:SS" )
 
-afterP :: Parser TimeFilter
-afterP = option readTimeValue
+afterP :: Parser (Maybe TimeFilter)
+afterP = optional $ option readTimeValue
    ( long "after"
    <> short 'a'
    <> help "Take only commands after given time. Format: <num>[smhd] or HH:MM:SS" )
